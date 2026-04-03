@@ -33,7 +33,13 @@ jobs:
       - name: 빌드 결과 확인
         run: ls -al build/libs
 
-      # 6. jar 업로드
+      # 6. jar 파일 이름 고정
+      - name: jar 이름 변경
+        run: |
+          mkdir -p deploy
+          cp build/libs/*SNAPSHOT.jar deploy/springApp.jar
+
+      # 7. jar 업로드
       - name: Upload JAR to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -41,10 +47,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "build/libs/*.jar"
+          source: "deploy/springApp.jar"
           target: "/home/ubuntu/app"
 
-      # 7. EC2에서 실행
+      # 8. EC2에서 실행
       - name: EC2에서 실행
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -54,7 +60,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             echo "Stopping existing process..."
-            pkill -f 'java -jar' || true
+            pkill -f springApp.jar || true
 
             echo "Starting new application..."
-            nohup java -jar /home/ubuntu/app/*.jar > app.log 2>&1 &
+            nohup java -jar /home/ubuntu/app/springApp.jar > app.log 2>&1 &
