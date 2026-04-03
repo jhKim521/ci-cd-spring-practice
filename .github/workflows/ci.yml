@@ -20,6 +20,28 @@ jobs:
             echo "접속 성공!"
             whoami
             pwd
+
+      - name: EC2로 JAR 업로드
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "build/libs/*.jar"
+          target: "/home/ubuntu/app"
+
+      - name: EC2에서 애플리케이션 실행
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            pkill -f 'java -jar' || true
+            nohup java -jar /home/ubuntu/app/*.jar > app.log 2>&1 &
+
 #      - name: 코드 가져오기
 #        uses: actions/checkout@v3
 #
