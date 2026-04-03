@@ -63,4 +63,4 @@ jobs:
             pkill -f springApp.jar || true
 
             echo "Starting new application..."
-            nohup java -jar /home/ubuntu/app/deploy/springApp.jar > app.log 2>&1 &
+            nohup java -jar /home/ubuntu/app/deploy/springApp.jar > app.log 2>&1
