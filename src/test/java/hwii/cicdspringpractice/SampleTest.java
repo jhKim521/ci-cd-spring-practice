@@ -11,11 +11,12 @@ class SampleTest {
         System.out.println("@@successTest");
 
     }
-
+/*
     @Test
     void failTest() {
         assertEquals(1, 2); // 일부러 실패
         System.out.println("@@failTest");
     }
+*/
 
 }
