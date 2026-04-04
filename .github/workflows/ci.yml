@@ -61,8 +61,7 @@ jobs:
           script_stop: true
           script: |
             echo "Stopping existing process..."
-            pkill -f springApp.jar || true
-            chmod +x /home/ubuntu/app/deploy/springApp.jar
+            sudo fuser -k -n tcp 8080
             echo "Starting new application..."
             nohup java -jar /home/ubuntu/app/deploy/springApp.jar > app.log 2>&1 &
             
