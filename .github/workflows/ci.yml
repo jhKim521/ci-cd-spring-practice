@@ -58,8 +58,22 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          script_stop: true
           script: |
             echo "Stopping existing process..."
             pkill -f springApp.jar || true
+            chmod +x /home/ubuntu/app/deploy/springApp.jar
             echo "Starting new application..."
             nohup java -jar /home/ubuntu/app/deploy/springApp.jar > app.log 2>&1 &
+            
+
+#
+#                      script_stop: true
+#                      script: |
+#                         rm -rf /home/ubuntu/instagram-server/current # 실행중인 코드 넣을 폴더
+#                         mkdir /home/ubuntu/instagram-server/current
+#                         mv /home/ubuntu/instagram-server/tobe/project.jar /home/ubuntu/instagram-server/current/project.jar # 이동
+#                         cd /home/ubuntu/instagram-server/current
+#                         sudo fuser -k -n tcp 8080 || true # 실행되고 있는 서버가 있으면 꺼줌
+#                         nohup java -jar project.jar > ./output.log 2>&1 & # 실행
+#                         rm -rf /home/ubuntu/instagram-server/tobe # 옮겼으니까 삭제
